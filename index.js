@@ -1,17 +1,19 @@
-const data = require("./data.json");
-const { random, sampleSize: sample } = require("lodash");
+const data = require('./data.json');
+const { random, sampleSize: sample } = require('lodash');
 
-const subjects = ["cats", "birds", "fish", "ocean waves", "trees", "poppies"];
+const subjects = ['cats', 'birds', 'fish', 'ocean waves', 'trees', 'poppies'];
+
+const getRandomValue = (key, opts) => (key in opts ? opts[key] : sample(data[key]));
 
 const promptmaker = (opts = {}) => {
-  const medium = "medium" in opts ? opts.medium : sample(data.mediums);
-  const subject = "subject" in opts ? opts.subject : sample(subjects);
-  const movement = "movement" in opts ? opts.movement : sample(data.movements);
-  const artist = "artist" in opts ? opts.artist : sample(data.artists);
-  const flavors =
-    "flavors" in opts ? opts.flavors : sample(data.flavors, random(1, 3));
+  const medium = getRandomValue('mediums', opts);
+  const subject = getRandomValue('subjects', opts);
+  const movement = getRandomValue('movements', opts);
+  const artist = getRandomValue('artists', opts);
+  const flavors = getRandomValue('flavors', opts) || sample(data.flavors, random(1, 3));
+
   let prompt = `${medium} of ${subject} ${movement} by ${artist}`;
-  if (flavors) prompt += `, ${flavors.join(", ")}`;
+  if (flavors) prompt += `, ${flavors.join(', ')}`;
   return prompt;
 };
 
